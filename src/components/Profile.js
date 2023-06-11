@@ -107,8 +107,16 @@ const Profilecontent = (props) => {
             const existingFollowing = doc.data().following || [];
     
             if (existingFollowing.includes(userId)) {
-              alert("User is already in the following array.");
-              return;
+              alert("User is already in the followers array. Removing user...");
+              const updatedFollowers = existingFollowing.filter((id) => id !== user.uid);
+              try {
+                await updateDoc(userRef, { following: updatedFollowers });
+                await addUserToFollowing(userId);
+                alert("Unfollowed successfully!");
+              } catch (error) {
+                alert("Error in updating:", error);
+              }
+              return ;
             }
     
             const updatedFollowing = [...existingFollowing, userId];
