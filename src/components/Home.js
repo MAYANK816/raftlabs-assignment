@@ -80,7 +80,7 @@ const Home = () => {
   };
 
   return <> 
-  {loading?"Loading....":user && following.length>0?
+  {loading?"Loading....":following.length>0?
     <MainComponent info={info}/>
     :"You Have 0 Following"}
     </>
