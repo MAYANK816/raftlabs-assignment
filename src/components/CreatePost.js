@@ -3,8 +3,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate,Link } from 'react-router-dom';
 import { auth,createPost } from '../Firebase/Firebase';
 import { PhotoIcon } from '@heroicons/react/24/solid'
+import {Box} from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
+
 const CreatePost = () => {
-  
+  const [loader,setLoader] = useState(false);
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   const [file, setFile] = useState("");
@@ -27,12 +30,19 @@ const CreatePost = () => {
       // eslint-disable-next-line
     }, [user, loading,error]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit =async (e) => {
       e.preventDefault();
+      setLoader(true);
     if (!file) {
         alert("Please choose a file first!")
+        setLoader(false);
+        return;
     }
-      createPost(user.email,postText,file);
+       createPost(user.email,postText,file).then((result)=>{
+        setLoader(false);
+        navigate("/home");
+       })
+    
 
   }
   return (
@@ -41,7 +51,6 @@ const CreatePost = () => {
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
             <div className="col-span-full">
               <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">
                 About
@@ -57,7 +66,12 @@ const CreatePost = () => {
                 />
               </div>
               <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p>
+
             </div>
+            {loader===true && <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+            </Box>}
+
             <div className="col-span-full">
               <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">
                 Cover photo

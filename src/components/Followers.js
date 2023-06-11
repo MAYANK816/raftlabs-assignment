@@ -22,6 +22,7 @@ const Followers = () => {
       else{
         fetchData();
       }
+      // eslint-disable-next-line
     }, [user, loading,error]);
 
     const fetchData = async () => {

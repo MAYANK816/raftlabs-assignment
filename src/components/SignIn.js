@@ -3,12 +3,15 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth,logInWithEmailAndPassword } from '../Firebase/Firebase';
 import { Link, useNavigate } from 'react-router-dom';
 import Lottie from "lottie-react";
+import {Box} from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import animationData from "../Animaions/social_media_anim.json";
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
+  const [loader,setLoader] = useState(false);
 
     useEffect(() => {
       if (loading) return;
@@ -20,14 +23,15 @@ const LoginForm = () => {
       if(error){
         alert(error);
       }
-   
+   // eslint-disable-next-line
     }, [user, loading,error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
+    setLoader(true);
     logInWithEmailAndPassword(email, password);
-
+    setLoader(false);
   };
 
   return (
@@ -37,9 +41,11 @@ const LoginForm = () => {
     
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <Lottie animationData={animationData} alt="logo" 
-            className="mx-auto h-20 w-auto"
-          />
+          {!loader?<Lottie animationData={animationData} alt="logo" 
+            className="mx-auto h-20 w-auto"/>:
+            <Box sx={{ display: 'flex',alignItems:'center',justifyContent:'center' }}>
+            <CircularProgress />
+          </Box>}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>

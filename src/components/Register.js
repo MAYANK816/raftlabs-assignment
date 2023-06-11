@@ -3,6 +3,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, registerWithEmailAndPassword } from '../Firebase/Firebase';
 import { useNavigate,Link } from 'react-router-dom';
 import Lottie from "lottie-react";
+import {Box} from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import animationData from "../Animaions/social_media_anim.json";
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +13,7 @@ const Register = () => {
   const [name, setName] = useState('');
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
-
+  const [loader,setLoader] = useState(false);
     useEffect(() => {
       if (loading) return;
       if (user) 
@@ -23,13 +25,18 @@ const Register = () => {
       if(error){
         alert(error);
       }
+      // eslint-disable-next-line
     }, [user, loading]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
     if(password===cpassword)
+    {
+    setLoader(true);
     registerWithEmailAndPassword(name,email, password);
+    setLoader(false);
+  }
     else{
         alert("Password and Confirm Password do not match");
     }
@@ -41,9 +48,11 @@ const Register = () => {
          
          <div className="flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 mt-10 mb-9">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <Lottie animationData={animationData} alt="logo" 
-            className="mx-auto h-20 w-auto"
-          />
+        {!loader?<Lottie animationData={animationData} alt="logo" 
+            className="mx-auto h-20 w-auto"/>:
+            <Box sx={{ display: 'flex',alignItems:'center',justifyContent:'center' }}>
+            <CircularProgress />
+          </Box>}
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Create new account
           </h2>

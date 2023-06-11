@@ -117,12 +117,14 @@ const createPost = async (name,posttextData, postImage) => {
                 shares:[]
               });
               alert("Post Created");
+              return true;
           })
       }
   )} 
   catch (err) {
     console.error(err);
     alert("Please Verify Your Details");
+    return false;
   }
 };
 
