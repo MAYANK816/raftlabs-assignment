@@ -58,7 +58,9 @@ const Post = ({post,following_id,docId}) => {
             try { 
               setClick(true);
               await updateDoc(userRef, { likes: updatedLikes });
+              alert("Liked successfully");
             } catch (error) {
+              alert("Error in updating:", error);
               console.error("Error updating array field:", error);
             }
           }
@@ -68,7 +70,6 @@ const Post = ({post,following_id,docId}) => {
     }
     const handleComment=(e)=>{
       setComment(e.target.value);
-      console.log(e.target.value);
     }
     const addUsertoComments = async () => {
       // Construct the document reference path
@@ -87,14 +88,15 @@ const Post = ({post,following_id,docId}) => {
             const updatedComments = Object.fromEntries(updatedCommentsArray);
             try {
               await updateDoc(userRef, { comments: updatedComments });
+              alert("Comment added successfully");
             } catch (error) {
+              alert("Error in updating:", error);
               console.error("Error updating array field:", error);
             }
           }
         });
       }
     };
-    
     
 
     return (
