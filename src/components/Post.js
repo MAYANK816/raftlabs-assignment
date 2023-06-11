@@ -75,7 +75,6 @@ const Post = ({post,following_id,docId}) => {
       // Construct the document reference path
       if (user) {
         console.log(docId);
-        console.log(comment);
         const querySnapshot = await getDocs(collection(db, "Posts", "allPosts", following_id));
         querySnapshot.forEach(async (doc) => {
           if (doc.id === docId) {
@@ -88,7 +87,7 @@ const Post = ({post,following_id,docId}) => {
             const updatedComments = Object.fromEntries(updatedCommentsArray);
             try {
               await updateDoc(userRef, { comments: updatedComments });
-              alert("Comment added successfully");
+              window.location.reload();
             } catch (error) {
               alert("Error in updating:", error);
               console.error("Error updating array field:", error);
