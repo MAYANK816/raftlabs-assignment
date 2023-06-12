@@ -37,7 +37,7 @@ const Profilecontent = (props) => {
   useEffect(() => {
       getFollowing();
   // eslint-disable-next-line 
-    }, [user,setfollowing,setFollowers,userId]);
+    }, [user,following,followers,userId]);
 
     const getFollowing = async () => {
       if(user)
@@ -53,7 +53,6 @@ const Profilecontent = (props) => {
           {
             setstatus(false);
           }
-
           setFollowers(doc.data().followers.length);
           setfollowing(doc.data().following.length);
           setfollow(doc.data().followers.length);
@@ -72,16 +71,17 @@ const Profilecontent = (props) => {
             const existingFollowers = doc.data().followers || [];
     
             if (existingFollowers.includes(user.uid)) {
-              alert("User is already in the followers array. Removing user...");
               const updatedFollowers = existingFollowers.filter((id) => id !== user.uid);
               try {
                 await updateDoc(userRef, { followers: updatedFollowers });
                 await addUserToFollowing(userId);
                 alert("Unfollowed successfully!");
+                setstatus(false);
+                setFollowers(followers-1);
               } catch (error) {
                 alert("Error in updating:", error);
               }
-              return;
+              return ;
             }
     
             const updatedFollowers = [...existingFollowers, user.uid];
@@ -89,6 +89,8 @@ const Profilecontent = (props) => {
             try {
               await updateDoc(userRef, { followers: updatedFollowers });
               await addUserToFollowing(userId);
+              setFollowers(followers+1);
+              setstatus(true);
               alert("Followed successfully!");
             } catch (error) {
               console.error("Error updating array field:", error);
@@ -107,22 +109,23 @@ const Profilecontent = (props) => {
             const existingFollowing = doc.data().following || [];
     
             if (existingFollowing.includes(userId)) {
-              alert("User is already in the followers array. Removing user...");
-              const updatedFollowers = existingFollowing.filter((id) => userId);
+              const updatedFollowing = existingFollowing.filter((id) => id !== userId);
               try {
-                await updateDoc(userRef, { following: updatedFollowers });
-                alert("Unfollowed successfully!");
+                await updateDoc(userRef, { following: updatedFollowing });
+                setstatus(false);
+                setfollowing(following-1);
               } catch (error) {
                 alert("Error in updating:", error);
               }
-              return ;
+              return;
             }
     
             const updatedFollowing = [...existingFollowing, userId];
     
             try {
               await updateDoc(userRef, { following: updatedFollowing });
-              alert("User added to following successfully!");
+              setstatus(true);
+              setfollowing(following+1);
             } catch (error) {
               console.error("Error updating following array:", error);
             }
