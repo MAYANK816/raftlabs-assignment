@@ -108,7 +108,7 @@ const Profilecontent = (props) => {
     
             if (existingFollowing.includes(userId)) {
               alert("User is already in the followers array. Removing user...");
-              const updatedFollowers = existingFollowing.filter((id) => id !== user.uid);
+              const updatedFollowers = existingFollowing.filter((id) => userId);
               try {
                 await updateDoc(userRef, { following: updatedFollowers });
                 alert("Unfollowed successfully!");
